@@ -1,6 +1,8 @@
-CC = gcc
-CFLAGS = -Wall -Werror=vla -Wextra -Wpedantic -std=c99 -Iinc -lm -g3 -ggdb
-CFLAGS_TEST = $(CFLAGS) -Itest
+# MinGW makefile
+
+CC = x86_64-w64-mingw32-gcc
+CFLAGS = -Wall -Werror=vla -Wextra -Wpedantic -std=c99 -D__USE_MINGW_ANSI_STDIO=1 -Iinc -O2 -s -static
+CFLAGS_TEST = -Wall -Werror=vla -Wextra -Wpedantic -std=c99 -D__USE_MINGW_ANSI_STDIO=1 -Iinc -Itest -g3 -ggdb
 INC = inc
 BIN = bin
 OBJ = obj
@@ -18,12 +20,12 @@ $(OBJ)/%.o: $(SRC)/%.c $(INC)/%.h
 
 sb: $(TEST)/sb.c $(MODULES_O)
 	mkdir -p $(BIN)
-	$(CC) $(CFLAGS) $^ -o $(BIN)/$@
+	$(CC) $(CFLAGS) $^ -o $(BIN)/$@.exe
 
 t: $(MODULES:%=t%)
 t%: $(TEST)/t%.c $(MODULES_O_TEST)
 	mkdir -p $(BIN)
-	$(CC) $(CFLAGS_TEST) $^ -o $(BIN)/$@
+	$(CC) $(CFLAGS_TEST) $^ -o $(BIN)/$@.exe
 
 
 COMMANDS = log view rm sum plot lim
@@ -31,8 +33,4 @@ COMMANDS_C = $(COMMANDS:%=$(SRC)/_lgr_%.c)
 
 lgr: $(SRC)/_lgr.c $(COMMANDS_C) $(MODULES_O)
 	mkdir -p $(BIN)
-	$(CC) $(CFLAGS) $^ -o $(BIN)/$@
-
-.PHONY: clean
-clean:
-	rm -f obj/*.o bin/*
+	$(CC) $(CFLAGS) $^ -o $(BIN)/$@.exe
