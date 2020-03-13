@@ -33,6 +33,7 @@ void prog_loadconf(void)
     if (st_conf == NULL)
         prog_err_nomem();
     ht_insert(st_conf, PROG_CONF_LOG_SIGN, 1);
+    ht_insert(st_conf, PROG_CONF_LIM_TYPE, 'r');
 
     // read
     FILE* f = fopen(PROG_IDFN, "r");
@@ -43,18 +44,14 @@ void prog_loadconf(void)
     for (ptrdiff_t lineno = 1;; lineno++) {
         char buf[32];
         char *skey, *svalue;
-        {
-            int status = util_readiniline(f, sizeof buf, buf, &skey, &svalue);
-            if (status == -1)
-                break;
-            else if (status != 0)
-                prog_err("%s:%td: invalid line", PROG_IDFN, lineno);
-        }
+        int status = util_readiniline(f, sizeof buf, buf, &skey, &svalue);
+        if (status == -1)
+            break;
+        if (status != 0)
+            prog_err("%s:%td: invalid line", PROG_IDFN, lineno);
 
         int64_t* value = ht_get(st_conf, skey);
-        if (value == NULL) {
-            continue;
-        } else {
+        if (value != NULL) {
             bool status;
             long long tmp = util_stoi(svalue, &status);
             if (!status)

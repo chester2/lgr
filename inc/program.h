@@ -13,6 +13,7 @@
 #define PROG_ARGSTART 2
 
 #define PROG_CONF_LOG_SIGN "log_sign"
+#define PROG_CONF_LIM_TYPE "lim_type"
 
 /* Read PROG_IDFN and load config options. Config file must consist only of
 lines in the form "key=value", where values are interpreted as integers.

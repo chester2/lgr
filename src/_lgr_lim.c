@@ -12,11 +12,11 @@
 
 #define HELP "\
 View, set, or remove contribution limits.\n\
-Usage: " PROG_NAME " lim (-r | -t)\n\
+Usage: " PROG_NAME " lim [-r | -t]\n\
 Usage: " PROG_NAME " lim <year> <limit>\n\
 \n\
 Options:\n\
-    -r          Show current year's remaining RRSP limit.\n\
+    -r          Show current year's remaining RRSP limit. This is the default.\n\
     -t          Show current year's remaining TFSA limit.\n\
 \n\
 Positional arguments:\n\
@@ -55,14 +55,23 @@ void main_lim(int argc, char** argv)
     if (usagetype == SET) {
         argc -= optind;
         argv += optind;
-        if (argc < 2)
-            prog_err_missingargs();
-        if (!prog_parsey(argv[0], &year))
-            prog_err("invalid <year>");
-        if (!prog_parsecents(argv[1], &limit))
-            prog_err("<limit> invalid or out of range");
-        if (limit < 0)
-            prog_err("<limit> must be non-negative");
+        if (argc >= 2) {
+            if (!prog_parsey(argv[0], &year))
+                prog_err("invalid <year>");
+            if (!prog_parsecents(argv[1], &limit))
+                prog_err("<limit> invalid or out of range");
+            if (limit < 0)
+                prog_err("<limit> must be non-negative");
+        } else {
+            switch (prog_getconf(PROG_CONF_LIM_TYPE)) {
+                case 't':
+                    usagetype = TFSA;
+                    break;
+                default:
+                    usagetype = RRSP;
+                    break;
+            }
+        }
     }
 
     HashTable* read_lim(void);
