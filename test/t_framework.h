@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define STR_EQ(s1, s2) (0 == strcmp((s1), (s2)))
+#define STR_EQ(s1, s2) (strcmp((s1), (s2)) == 0)
 
 bool TFWK_LOG;
 

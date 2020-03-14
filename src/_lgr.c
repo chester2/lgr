@@ -1,8 +1,6 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
-#include "util.h"
 #include "program.h"
 
 #ifdef _WIN32
@@ -15,7 +13,7 @@ void reset_cp(void)
     fflush(stdout);
     SetConsoleOutputCP(st_origcp);
 }
-#endif
+#endif // _WIN32
 
 #define HELP "\
 Canadian cash flow tracker.\n\
@@ -31,10 +29,8 @@ Commands:\n\
     lim     Work with limits for registered accounts.\n\
 "
 
-#define TRY_DELEGATE(cmdname) \
-    if (0 == strcmp(cmd, #cmdname)) main_##cmdname(argc, argv)
-
 // The below functions must call exit().
+void main_init(int argc, char** argv);
 void main_log(int argc, char** argv);
 void main_view(int argc, char** argv);
 void main_rm(int argc, char** argv);
@@ -48,26 +44,18 @@ int main(int argc, char** argv)
     st_origcp = GetConsoleOutputCP();
     SetConsoleOutputCP(65001);
     atexit(reset_cp);
-    #endif
+    #endif // _WIN32
 
     setvbuf(stdout, NULL, _IOFBF, BUFSIZ);
+
     const char* cmd = argv[PROG_ARGSTART - 1];
+    if (argc < PROG_ARGSTART || strcmp(cmd, "-h") == 0)
+        prog_pexit(HELP);
 
-    if (
-        argc < PROG_ARGSTART
-        || 0 == strcmp(cmd, "-h")
-    ) prog_pexit(HELP);
+    #define TRY_DELEGATE(cmdname) \
+        if (strcmp(cmd, #cmdname) == 0) main_##cmdname(argc, argv)
 
-    if (0 == strcmp(cmd, "init")) {
-        if (util_fexists(PROG_IDFN))
-            prog_err("current directory already a lgr directory");
-        FILE* f = fopen(PROG_IDFN, "w");
-        if (f == NULL)
-            prog_err("cannot create file '" PROG_IDFN "'");
-        fclose(f);
-        prog_pexit("Initialized lgr directory.");
-    }
-
+    TRY_DELEGATE(init);
     TRY_DELEGATE(log);
     TRY_DELEGATE(view);
     TRY_DELEGATE(rm);

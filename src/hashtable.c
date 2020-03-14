@@ -109,7 +109,7 @@ static bool keysmatch(
     if (ktype == HT_INT)
         return true;
     else if (ktype == HT_STR)
-        return 0 == strcmp(key, item->key.s);
+        return strcmp(key, item->key.s) == 0;
     else
         return false;
 }

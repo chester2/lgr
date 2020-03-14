@@ -28,7 +28,7 @@ t%: $(TEST)/t%.c $(MODULES_O_TEST)
 	$(CC) $(CFLAGS_TEST) $^ -o $(BIN)/$@.exe
 
 
-COMMANDS = log view rm sum plot lim
+COMMANDS = init log view rm sum plot lim
 COMMANDS_C = $(COMMANDS:%=$(SRC)/_lgr_%.c)
 
 lgr: $(SRC)/_lgr.c $(COMMANDS_C) $(MODULES_O)

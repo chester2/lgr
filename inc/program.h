@@ -43,7 +43,7 @@ bool prog_parsey(const char* s, int* y);
 bool prog_parsem(const char* s, int* m);
 bool prog_parsedt(const char* s, int32_t* dt);
 
-/* Parse monetary amounts into cents. Input string must be have at most 2
+/* Parse monetary amounts into cents. Input string must have at most 2
 decimal places. Supports using commas as thousands separators. */
 bool prog_parsecents(const char* s, int64_t* cents);
 

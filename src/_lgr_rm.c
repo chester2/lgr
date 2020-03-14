@@ -23,7 +23,7 @@ int main_rm(int argc, char** argv)
     argc -= PROG_ARGSTART;
     argv += PROG_ARGSTART;
     for (int i = 0; i < argc; i++)
-        if (0 == strcmp(argv[i], "-h"))
+        if (strcmp(argv[i], "-h") == 0)
             prog_pexit(HELP);
     prog_loadconf();
 
