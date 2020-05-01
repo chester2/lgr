@@ -13,7 +13,7 @@
 #define HELP "\
 View, set, or remove contribution limits.\n\
 Usage: " PROG_NAME " lim [-r | -t]\n\
-Usage: " PROG_NAME " lim <year> <limit>\n\
+       " PROG_NAME " lim <year> <limit>\n\
 \n\
 Options:\n\
     -r          Show current year's remaining RRSP limit. This is the default.\n\
